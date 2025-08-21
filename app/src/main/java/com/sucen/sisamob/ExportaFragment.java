@@ -433,8 +433,8 @@ public class ExportaFragment extends Fragment {
         @Override
         protected Boolean doInBackground(final String... params)
         {
-            //final String url = "https://vigent.saude.sp.gov.br/sisapi/exporta.php?tipo="+mTipo; //"http://200.144.1.24/sisapi/api/recebe/dados.php?tipo="+mTipo;//
-            final String url = "http://vigent.saude.sp.gov.br/sisapi/api/recebe/dados.php?tipo="+mTipo;
+            final String url = "http://200.144.1.23/sisapi/api/dados"; //"http://200.144.1.24/sisapi/api/recebe/dados.php?tipo="+mTipo;//
+            //final String url = "https://vigent.saude.sp.gov.br/sisapi/api/recebe/dados.php?tipo="+mTipo;
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -473,6 +473,7 @@ public class ExportaFragment extends Fragment {
                 protected Map<String, String> getParams()
                 {
                     Map<String, String> postParams = new HashMap<>();
+                    postParams.put("tipo", mTipo);
                     postParams.put("dados", mDados);
                     return postParams;
                 }

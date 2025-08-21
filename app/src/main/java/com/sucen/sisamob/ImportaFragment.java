@@ -25,6 +25,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -50,9 +53,13 @@ public class ImportaFragment extends Fragment{
     Button btImporta;
     TextView tvConecta;
     Switch swLimpa;
+    EditText etNome, etQuant;
+    GridLayout glOpcional;
+    LinearLayout llLocal;
 
     int nivel;
     String webUri;
+    String baseUrl = "http://200.144.1.23/sisapi/api";
     String resultado = "Recebidos:\n";
     List<String> municipio, id_municipio, colegiado, id_colegiado, drs, id_drs, regional, id_regional;
 
@@ -113,6 +120,11 @@ public class ImportaFragment extends Fragment{
         etLocal     = (AutoCompleteTextView) v.findViewById(R.id.etLocal);
         btImporta   = (Button) v.findViewById(R.id.btImporta);
         swLimpa     = (Switch) v.findViewById(R.id.swLimpa);
+        etNome      = (EditText) v.findViewById(R.id.etNomeNav);
+        etQuant     = (EditText) v.findViewById(R.id.etQuantNav);
+        glOpcional  = (GridLayout) v.findViewById(R.id.opcionalNav);
+        llLocal     = (LinearLayout) v.findViewById(R.id.llLocalImp);
+
 
         if(isConnected()){
             //  tvIsConnected.setBackgroundColor(0xFF00CC00);
@@ -164,6 +176,26 @@ public class ImportaFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 chamaProcessa(v);
+            }
+        });
+
+        rgTipo.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (group.getCheckedRadioButtonId()) {
+                    case R.id.chkCadNav:
+                        glOpcional.setVisibility(View.VISIBLE);
+                        llLocal.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.chkSistema:
+                        glOpcional.setVisibility(View.GONE);
+                        llLocal.setVisibility(View.GONE);
+                        break;
+                    default:
+                        glOpcional.setVisibility(View.GONE);
+                        llLocal.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
         });
 
@@ -354,34 +386,25 @@ public class ImportaFragment extends Fragment{
         }
         switch (rgTipo.getCheckedRadioButtonId()) {
             case R.id.chkTerritorio:
-                webUri = "https://vigent.saude.sp.gov.br/sisapi/api/cadastro/base.php?nivel=" + nivel + "&id=" + id;
+                webUri = baseUrl + "/cadastro/base/" + nivel + "/" + id;
                 break;
             case R.id.chkCadImovel:
                 webUri = "https://vigent.saude.sp.gov.br/sisapi/api/cadastro/imovel.php?nivel=" + nivel + "&id=" + id;
                 break;
             case R.id.chkCadNav:
-                //webUri = "http://200.144.1.23/vigent/sisapi/api/cadastro/area_nav.php?nivel=" + nivel + "&id=" + id;
+              //  webUri = "http://200.144.1.23/vigent/sisapi/api/cadastro/area_nav.php?nivel=" + nivel + "&id=" + id;
                 webUri = "https://vigent.saude.sp.gov.br/sisapi/api/cadastro/area_nav.php?nivel=" + nivel + "&id=" + id;
+                if (!etQuant.getText().toString().trim().isEmpty()){
+                    webUri += "&quant="+etQuant.getText().toString();
+                }
+                if (!etNome.getText().toString().trim().isEmpty()){
+                    webUri += "&nome="+etNome.getText().toString();
+                }
                 break;
             default:
-                webUri = "https://vigent.saude.sp.gov.br/sisapi/api/sistema/base.php";
+                webUri = baseUrl + "/sistema/base";
                 break;
         }
-
-        /*switch (rgTipo.getCheckedRadioButtonId()) {
-            case R.id.chkTerritorio:
-                webUri = "http://200.144.1.24/sisapi/api/cadastro/base.php?nivel=" + nivel + "&id=" + id;
-                break;
-            case R.id.chkCadImovel:
-                webUri = "http://200.144.1.24/sisapi/api/cadastro/imovel.php?nivel=" + nivel + "&id=" + id;
-                break;
-            case R.id.chkCadNav:
-                webUri = "http://200.144.1.24/sisapi/api/cadastro/area_nav.php?nivel=" + nivel + "&id=" + id;
-                break;
-            default:
-                webUri = "http://200.144.1.24/sisapi/api/sistema/base.php";
-                break;
-        }*/
 
 
         download.execute();

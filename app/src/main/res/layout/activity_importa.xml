@@ -65,6 +65,46 @@
                 android:text="@string/chkSistema" />
         </RadioGroup>
 
+        <GridLayout
+            android:id="@+id/opcionalNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:columnCount="2"
+            android:rowCount="2"
+            >
+           <TextView
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_columnWeight="1"
+               android:textSize="@dimen/font_size"
+               android:text="Quantidade"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:textSize="@dimen/font_size"
+                android:text="Nome"/>
+
+            <EditText
+                android:id="@+id/etQuantNav"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:inputType="number"
+                android:textSize="@dimen/font_size"
+                android:hint="Opcional"/>
+
+            <EditText
+                android:id="@+id/etNomeNav"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size"
+                android:layout_columnWeight="1"
+                android:hint="Opcional"/>
+        </GridLayout>
+
         <TextView
             android:id="@+id/etImpNivel"
             android:layout_width="wrap_content"
@@ -122,25 +162,32 @@
             android:textOff="Não"
             android:textOn="Sim"/>
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:textSize="@dimen/font_size"
-            android:text="@string/tvLocal" />
-
-        <AutoCompleteTextView
-            android:id="@+id/etLocal"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textSize="@dimen/font_size"
-            android:text="" >
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/llLocalImp">
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/font_size"
+                android:text="@string/tvLocal" />
 
-            <requestFocus />
-        </AutoCompleteTextView>
+            <AutoCompleteTextView
+                android:id="@+id/etLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textSize="@dimen/font_size"
+                android:text="" >
+
+                <requestFocus />
+            </AutoCompleteTextView>
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/btImporta"
