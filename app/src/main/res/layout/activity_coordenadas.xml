@@ -10,6 +10,41 @@
         android:orientation="vertical"
         android:paddingTop="?attr/actionBarSize" >
 
+    <LinearLayout
+        android:id="@+id/bloco10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rgAtividadeCoord"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/rbPEC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ponto Estratégico" />
+
+            <RadioButton
+                android:id="@+id/rbIEC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Imóvel Especial" />
+
+            <RadioButton
+                android:id="@+id/rbEdlC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="EDL" />
+        </RadioGroup>
+    </LinearLayout>
+
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"

@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class Alado {
     long _id;
 
     String dt_cadastro, casa,am_larva, am_intra, am_peri;
-    int id_municipio, id_quarteirao, id_atividade, imovel,  id_situacao, moradores, rec_larva, id_execucao;
+    int id_municipio, id_quarteirao, ref_ativ, id_atividade, id_imovel, imovel,  id_situacao, moradores, rec_larva, id_execucao;
     Float umidade, temperatura;
     String agente;
     String latitude;
@@ -43,7 +43,7 @@ public class Alado {
     public void popula(){
         GerenciarBanco db = new GerenciarBanco(this.context);
         String selectQuery = "SELECT dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, casa, id_situacao, umidade, temperatura, moradores, rec_larva, am_larva, " +
-                "am_intra, am_peri, latitude, longitude, agente, id_execucao, status, dt_insere FROM alado v where _id=" + this._id;
+                "am_intra, am_peri, latitude, longitude, agente, id_execucao, status, ref_ativ, id_imovel, dt_insere FROM alado v where _id=" + this._id;
 
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -66,6 +66,8 @@ public class Alado {
             this.id_execucao    = cursor.getInt(16);
             this.agente 		= cursor.getString(17);
             this.status         = cursor.getInt(18);
+            this.ref_ativ 	= cursor.getInt(19);
+            this.id_imovel = cursor.getInt(20);
         }
         db.close();
 
@@ -77,10 +79,12 @@ public class Alado {
             ContentValues valores = new ContentValues();
             valores.put("dt_cadastro", this.dt_cadastro);
             valores.put("id_atividade", this.id_atividade);
+            valores.put("ref_ativ", this.ref_ativ);
             valores.put("id_municipio", this.id_municipio);
             valores.put("id_quarteirao", this.id_quarteirao);
             valores.put("casa", this.casa);
             valores.put("imovel", this.imovel);
+            valores.put("id_imovel",this.id_imovel);
             valores.put("umidade", this.umidade);
             valores.put("id_situacao", this.id_situacao);
             valores.put("temperatura", this.temperatura);
@@ -89,8 +93,6 @@ public class Alado {
             valores.put("am_larva", this.am_larva);
             valores.put("am_intra", this.am_intra);
             valores.put("am_peri", this.am_peri);
-            //valores.put("latitude", this.latitude);
-            //valores.put("longitude", this.longitude);
             valores.put("id_execucao", this.id_execucao);
             valores.put("agente", this.agente);
             valores.put("status", this.status);
@@ -153,7 +155,7 @@ public class Alado {
     public List<RelatorioList> getList(){
         GerenciarBanco db = new GerenciarBanco(this.context);
 
-        String selectQuery = "SELECT a.nome, ' T:(' || sum(case when id_situacao=1 then 1 else 0 end) || ') / NT: (' || sum(case when id_situacao>1 then 1 else 0 end) || ')', 'Total: ' || count(v._id) FROM alado v join atividade a using(id_atividade) group by a.nome";
+        String selectQuery = "SELECT 'Cap. Alado (' || a.nome || ')', ' T:(' || sum(case when id_situacao=1 then 1 else 0 end) || ') / NT: (' || sum(case when id_situacao>1 then 1 else 0 end) || ')', 'Total: ' || count(v._id) FROM alado v join atividade a using(id_atividade) group by a.nome";
 
         Cursor cursor = db.getReadableDatabase().rawQuery(selectQuery, null);
         List<RelatorioList> lista = new ArrayList<RelatorioList>();
@@ -174,7 +176,7 @@ public class Alado {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT _id, dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, casa, id_situacao, umidade, temperatura, moradores, rec_larva, am_larva, " +
-                "am_intra, am_peri, latitude, longitude, id_execucao, agente, datetime(dt_insere,'localtime') FROM alado where status = 0";
+                "am_intra, am_peri, latitude, longitude, id_execucao, agente, ref_ativ, id_imovel, datetime(dt_insere,'localtime') FROM alado where status = 0";
 
         try {
             Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
@@ -200,8 +202,25 @@ public class Alado {
                     map.put("latitude", cursor.getString(15));
                     map.put("longitude", cursor.getString(16));
                     map.put("id_execucao", cursor.getString(17));
-                    map.put("agente", cursor.getString(18).replace(" ", "_"));
-                    map.put("dt_insere", cursor.getString(19));
+                    String original = cursor.getString(18);
+
+                    if (original != null) {
+                        // 1. Substitui espaços
+                        String processed = original.replace(" ", "_");
+
+                        // 2. Limita o endIndex ao tamanho mínimo entre o tamanho da string e 30
+                        int maxLength = Math.min(processed.length(), 30);
+
+                        // 3. Aplica o substring de forma segura
+                        map.put("agente", processed.substring(0, maxLength));
+                    } else {
+                        // Lida com o caso nulo
+                        map.put("agente", "N/I");
+                    }
+                 //   map.put("agente", cursor.getString(18).replace(" ", "_").substring(0,30));
+                    map.put("ref_ativ", cursor.getString(19));
+                    map.put("id_imovel", cursor.getString(20));
+                    map.put("dt_insere", cursor.getString(21));
                     wordList.add(map);
                     //Log.d("query",map.toString());
                 } while (cursor.moveToNext());
@@ -426,5 +445,21 @@ public class Alado {
 
     public void setId_execucao(int id_execucao) {
         this.id_execucao = id_execucao;
+    }
+
+    public int getRef_ativ() {
+        return ref_ativ;
+    }
+
+    public void setRef_ativ(int ref_ativ) {
+        this.ref_ativ = ref_ativ;
+    }
+
+    public int getId_imovel() {
+        return id_imovel;
+    }
+
+    public void setId_imovel(int id_imovel) {
+        this.id_imovel = id_imovel;
     }
 }

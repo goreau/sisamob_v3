@@ -3,6 +3,7 @@ package producao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import utilitarios.GerenciarBanco;
 import utilitarios.MyToast;
@@ -15,7 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class VcFolha {
     long _id;
@@ -26,6 +27,7 @@ public class VcFolha {
     int id_atividade;
     int imovel;
     String casa;
+    String obs;
     int id_execucao;
     int id_situacao;
     int id_tipo;
@@ -35,9 +37,12 @@ public class VcFolha {
     int qt_peri;
     int id_prod_neb;
     int qt_neb;
+    int id_prod_bri;
+    int qt_bri;
     int focal;
     int peri;
     int neb;
+    int bri;
     int mecanico;
     int alternativo;
     String agente;
@@ -113,6 +118,13 @@ public class VcFolha {
     public void setCasa(String casa) {
         this.casa = casa;
     }
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
 
     public int getId_execucao() {
         return id_execucao;
@@ -138,10 +150,6 @@ public class VcFolha {
         this.id_situacao = id_situacao;
     }
 
-    public int getId_prod_focal() {
-        return id_prod_focal;
-    }
-
     public void setId_prod_focal(int id_prod_focal) {
         this.id_prod_focal = id_prod_focal;
     }
@@ -152,10 +160,6 @@ public class VcFolha {
 
     public void setQt_focal(int qt_focal) {
         this.qt_focal = qt_focal;
-    }
-
-    public int getId_prod_peri() {
-        return id_prod_peri;
     }
 
     public void setId_prod_peri(int id_prod_peri) {
@@ -170,10 +174,6 @@ public class VcFolha {
         this.qt_peri = qt_peri;
     }
 
-    public int getId_prod_neb() {
-        return id_prod_neb;
-    }
-
     public void setId_prod_neb(int id_prod_neb) {
         this.id_prod_neb = id_prod_neb;
     }
@@ -184,6 +184,18 @@ public class VcFolha {
 
     public void setQt_neb(int qt_neb) {
         this.qt_neb = qt_neb;
+    }
+
+    public int getQt_bri() {
+        return qt_bri;
+    }
+
+    public void setQt_bri(int qt_bri) {
+        this.qt_bri = qt_bri;
+    }
+
+    public void setId_prod_bri(int id_prod_bri) {
+        this.id_prod_bri = id_prod_bri;
     }
 
     public int getId_area_nav() {
@@ -257,6 +269,13 @@ public class VcFolha {
     public void setNeb(int neb) {
         this.neb = neb;
     }
+    public int getBri() {
+        return bri;
+    }
+
+    public void setBri(int bri) {
+        this.bri = bri;
+    }
 
     public int getStatus() {
         return status;
@@ -271,7 +290,7 @@ public class VcFolha {
         String selectQuery = "SELECT dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, "+
                 "id_execucao, id_situacao, id_prod_focal, qt_focal, id_prod_peri, qt_peri, id_prod_neb, " +
                 "qt_neb, mecanico, alternativo, latitude, longitude, agente, id_tipo, id_area_nav, " +
-                "focal, peri, neb, status, casa FROM vc_folha v where _id=" + this._id;
+                "focal, peri, neb, status, casa, br_aedes, qt_br, id_prod_br, obs FROM vc_folha v where _id=" + this._id;
 
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -300,6 +319,10 @@ public class VcFolha {
             this.neb            = cursor.getInt(22);
             this.status         = cursor.getInt(23);
             this.casa           = cursor.getString(24);
+            this.bri            = cursor.getInt(25);
+            this.qt_bri         = cursor.getInt(26);
+            this.id_prod_bri    = cursor.getInt(27);
+            this.obs            = cursor.getString(28);
         }
         db.close();
 
@@ -323,11 +346,14 @@ public class VcFolha {
             valores.put("qt_peri", this.qt_peri);
             valores.put("id_prod_neb", this.id_prod_neb);
             valores.put("qt_neb", this.qt_neb);
+            valores.put("id_prod_br", this.id_prod_bri);
+            valores.put("qt_br", this.qt_bri);
             valores.put("mecanico", this.mecanico);
             valores.put("alternativo", this.alternativo);
             valores.put("focal",this.focal);
             valores.put("peri",this.peri);
             valores.put("neb",this.neb);
+            valores.put("br_aedes",this.bri);
             if (this._id==0) {
                 valores.put("latitude", this.latitude);
                 valores.put("longitude", this.longitude);
@@ -336,6 +362,7 @@ public class VcFolha {
             valores.put("id_tipo", this.id_tipo);
             valores.put("status", this.status);
             valores.put("casa", this.casa);
+            valores.put("obs",this.obs);
             if (this._id > 0) {
                 String[] args = { Long.toString(this._id) };
                 db.getWritableDatabase().update("vc_folha", valores, "_id=?", args);
@@ -425,13 +452,14 @@ public class VcFolha {
         GerenciarBanco db 	= new GerenciarBanco(context);
         Recipiente rec 		= new Recipiente(0);
         Condicao cond		= new Condicao(0);
-        String filtQd = qt=="0" ? "" : " and id_quarteirao="+qt;
+        String filtQd = Objects.equals(qt, "0") ? "" : " and id_quarteirao="+qt;
 
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, Object>> wordList;
+        wordList = new ArrayList<HashMap<String, Object>>();
         String selectQuery = "SELECT  _id, dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, id_execucao, id_situacao, "
                 + "id_prod_focal, qt_focal, id_prod_peri, qt_peri, id_prod_neb, qt_neb, mecanico, alternativo, latitude, longitude, "
-                + "agente, status, id_tipo, id_area_nav, focal, peri, neb, casa, datetime(dt_insere,'localtime') FROM vc_folha where status = 0"
+                + "agente, status, id_tipo, id_area_nav, focal, peri, neb, casa, datetime(dt_insere,'localtime'), br_aedes, qt_br, "
+                + "id_prod_br, obs FROM vc_folha where status = 0"
                 + filtQd;
 
         try {
@@ -439,7 +467,7 @@ public class VcFolha {
 
             if (cursor.moveToFirst()) {
                 do {
-                    HashMap<String, String> map = new HashMap<String, String>();
+                    HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("id_vc_folha", cursor.getString(0));
                     map.put("dt_cadastro", cursor.getString(1));
                     map.put("id_municipio", cursor.getString(2));
@@ -458,7 +486,22 @@ public class VcFolha {
                     map.put("alternativo", cursor.getString(15));
                     map.put("latitude", cursor.getString(16));
                     map.put("longitude", cursor.getString(17));
-                    map.put("agente", cursor.getString(18).replace(" ", "_"));
+                    String original = cursor.getString(18);
+
+                    if (original != null) {
+                        // 1. Substitui espaços
+                        String processed = original.replace(" ", "_");
+
+                        // 2. Limita o endIndex ao tamanho mínimo entre o tamanho da string e 30
+                        int maxLength = Math.min(processed.length(), 30);
+
+                        // 3. Aplica o substring de forma segura
+                        map.put("agente", processed.substring(0, maxLength));
+                    } else {
+                        // Lida com o caso nulo
+                        map.put("agente", "N/I");
+                    }
+                  //  map.put("agente", cursor.getString(18).replace(" ", "_").substring(0,30));
                     map.put("status", cursor.getString(19));
                     map.put("id_tipo", cursor.getString(20));
                     map.put("id_area_nav", cursor.getString(21));
@@ -467,8 +510,12 @@ public class VcFolha {
                     map.put("neb", cursor.getString(24));
                     map.put("casa", cursor.getString(25).replace(" ", "_"));
                     map.put("dt_insere", cursor.getString(26));
+                    map.put("br_aedes",cursor.getString(27));
+                    map.put("qt_br",cursor.getString(28));
+                    map.put("id_prod_br",cursor.getString(29));
+                    map.put("obs",cursor.getString(30));
                     map.put("recipientes", rec.composeJSONfromSQLite2(2, cursor.getString(0)));
-                    //map.put("condicao", "[]");//cond.composeJSONfromSQLite2(cursor.getString(0)));
+
                     wordList.add(map);
                     Log.d("query",map.toString());
                 } while (cursor.moveToNext());
@@ -617,51 +664,6 @@ public class VcFolha {
             } while (cursor.moveToNext());
         }
         return lista;
-    }
-
-    public ContentValues[] persiste(){
-        int i = 0;
-        GerenciarBanco db = new GerenciarBanco(this.context);
-        String selectQuery = "SELECT  _id, dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, id_execucao, id_situacao, "
-                + "id_prod_focal, qt_focal, id_prod_peri, qt_peri, id_prod_neb, qt_neb, mecanico, alternativo, latitude, longitude, "
-                + "agente, status, id_tipo, id_area_nav, focal, peri, neb, 0 as casa FROM vc_folha where status = 0";
-
-        Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
-        ContentValues[] total = new ContentValues[cursor.getCount()];
-        if (cursor.moveToFirst()) {
-            do {
-                ContentValues map = new ContentValues();
-                map.put("_id", cursor.getString(0));
-                map.put("dt_cadastro", cursor.getString(1));
-                map.put("id_municipio", cursor.getString(2));
-                map.put("id_quarteirao", cursor.getString(3));
-                map.put("id_atividade", cursor.getString(4));
-                map.put("imovel", cursor.getString(5));
-                map.put("id_execucao", cursor.getString(6));
-                map.put("id_situacao", cursor.getString(7));
-                map.put("id_prod_focal", cursor.getString(8));
-                map.put("qt_focal", cursor.getString(9));
-                map.put("id_prod_peri", cursor.getString(10));
-                map.put("qt_peri", cursor.getString(11));
-                map.put("id_prod_neb", cursor.getString(12));
-                map.put("qt_neb", cursor.getString(13));
-                map.put("mecanico", cursor.getString(14));
-                map.put("alternativo", cursor.getString(15));
-                map.put("latitude", cursor.getString(16));
-                map.put("longitude", cursor.getString(17));
-                map.put("agente", cursor.getString(18).replace(" ", "_"));
-                map.put("status", cursor.getString(19));
-                map.put("id_tipo", cursor.getString(20));
-                map.put("id_area_nav", cursor.getString(21));
-                map.put("focal", cursor.getString(22));
-                map.put("peri", cursor.getString(23));
-                map.put("neb", cursor.getString(24));
-                map.put("casa", cursor.getString(25));
-                total[i++] = map;
-            }while (cursor.moveToNext());
-        }
-        db.close();
-        return total;
     }
 
     public boolean recupera(ContentValues[] dados){

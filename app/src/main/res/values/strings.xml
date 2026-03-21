@@ -59,6 +59,7 @@
     <string name="tvFocal">Focal</string>
     <string name="tvPeri">Perifocal</string>
     <string name="tvNeb">Nebuliz.</string>
+    <string name="tvBri">BR Aedes</string>
     <string name="tvExecucao">Execução:</string>
     <string name="chkSucen">Estado</string>
     <string name="chkPsf">PACS/PSF</string>

@@ -15,11 +15,12 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Coordenadas {
     long _id;
     int id_imovel;
+    int id_atividade;
     String latitude;
     String longitude;
     int status;
@@ -64,12 +65,21 @@ public class Coordenadas {
         this.status = status;
     }
 
+    public int getId_atividade() {
+        return id_atividade;
+    }
+
+    public void setId_atividade(int id_atividade) {
+        this.id_atividade = id_atividade;
+    }
+
     public boolean manipula(){
         Context context = PrincipalActivity.sisamobContext;
         GerenciarBanco db = new GerenciarBanco(context);
         try{
             ContentValues valores = new ContentValues();
             valores.put("id_imovel", this.id_imovel);
+            valores.put("id_atividade", this.id_atividade);
             valores.put("latitude", this.latitude);
             valores.put("longitude", this.longitude);
             valores.put("status", 0);
@@ -111,7 +121,7 @@ public class Coordenadas {
 
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT  _id, id_imovel, latitude, longitude, status " +
+        String selectQuery = "SELECT  _id, id_imovel, latitude, longitude, status, id_atividade " +
                 "FROM coordenadas where status = 0";
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -122,6 +132,7 @@ public class Coordenadas {
                 map.put("latitude", cursor.getString(2));
                 map.put("longitude", cursor.getString(3));
                 map.put("status", cursor.getString(4));
+                map.put("id_atividade", cursor.getString(5));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -171,8 +182,8 @@ public class Coordenadas {
         Context context = PrincipalActivity.sisamobContext;
         GerenciarBanco db = new GerenciarBanco(context);
 
-        String selectQuery = "SELECT i.endereco, ('Lat:' || c.latitude),('Long:' || c.longitude) " +
-                "FROM coordenadas c join imovel i using(id_imovel)";
+        String selectQuery = "SELECT COALESCE(i.endereco,e.endereco), ('Lat:' || c.latitude),('Long:' || c.longitude) " +
+                "FROM coordenadas c left join imovel i using(id_imovel) left join cadastro_edl e on e.id_cadastro_edl=c.id_imovel";
 
         Cursor cursor = db.getReadableDatabase().rawQuery(selectQuery, null);
         List<RelatorioList> lista = new ArrayList<RelatorioList>();

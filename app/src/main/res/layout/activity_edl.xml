@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="5dp"
+    android:paddingTop="?attr/actionBarSize" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/edlLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvOrdem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ordem"
+        android:textSize="@dimen/font_size"/>
+
+    <EditText
+        android:id="@+id/etOrdem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="@dimen/font_size"
+        android:hint="@string/etImovel"
+        android:inputType="number" >
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size"
+        android:text="@string/tvImovel" />
+
+    <AutoCompleteTextView
+        android:id="@+id/etCadastro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="@dimen/font_size"
+        android:text="" >
+    </AutoCompleteTextView>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size"
+        android:text="@string/rgSituacao" />
+
+    <RadioGroup
+        android:id="@+id/rgSituacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/chkTrabalhado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="@dimen/font_size"
+            android:text="@string/chkTrab" />
+
+        <RadioButton
+            android:id="@+id/chkFechado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size"
+            android:text="@string/chkFech" />
+
+        <RadioButton
+            android:id="@+id/chkRecusa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size"
+            android:text="@string/chkRec" />
+    </RadioGroup>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/tvNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size"
+        android:text="Nível da Água" />
+
+    <RadioGroup
+        android:id="@+id/rgNivelAgua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/chkSeca"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="@dimen/font_size"
+            android:text="Seca" />
+
+        <RadioButton
+            android:id="@+id/chk50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size"
+            android:text="Água até 50%" />
+
+        <RadioButton
+            android:id="@+id/chkCheia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size"
+            android:text="Água acima de 50%" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvLarvas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size"
+        android:text="Larvas" />
+
+
+
+    <EditText
+        android:id="@+id/etLarvas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="@dimen/font_size"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/tvPupas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size"
+        android:text="Pupas" />
+
+
+
+    <EditText
+        android:id="@+id/etPupas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="@dimen/font_size"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <CheckBox
+        android:id="@+id/cb1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Peça da EDL desaparecida"
+        android:tag="65" />
+
+    <CheckBox
+        android:id="@+id/cb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EDL desaparecida"
+        android:tag="66" />
+
+    <CheckBox
+        android:id="@+id/cb3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EDL quebrada"
+        android:tag="67" />
+
+    <CheckBox
+        android:id="@+id/cb4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Intervalo de manut maior que 30 dias"
+        android:tag="68" />
+
+    <CheckBox
+        android:id="@+id/cb5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mudança no local de instalação"
+        android:tag="69" />
+
+    <CheckBox
+        android:id="@+id/cb6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desativada/Retirada"
+        android:tag="70" />
+
+    <CheckBox
+        android:id="@+id/cb9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Outros"
+        android:tag="71" />
+
+    <TextView
+        android:id="@+id/tvObs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_size"
+        android:text="Observação" />
+
+
+
+    <EditText
+        android:id="@+id/etObservacao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textSize="@dimen/font_size"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btNovo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/novo"
+        android:paddingRight="80sp"
+        android:textSize="@dimen/font_small"
+        android:text="@string/btNovo" />
+    <Button
+        android:id="@+id/btExcluiCad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/trash"
+        android:paddingRight="80sp"
+        android:textSize="@dimen/font_small"
+        android:text="Excluir Registro" />
+
+</LinearLayout>
+</ScrollView>

@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.sucen.sisamob.PrincipalActivity;
-import com.sucen.sisamob.R;
+import com.sucen.sisamobii.PrincipalActivity;
+import com.sucen.sisamobii.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConsultaFragment extends Fragment{
     SparseArray<Group> groups = new SparseArray<Group>();
@@ -42,7 +45,8 @@ public class ConsultaFragment extends Fragment{
         createFolha();
         createOvitrampa();
         createAlado();
-        createAladoIm();
+        createEdl();
+
         if (j==0){
             groups.append(j, new Group("Nenhum registro cadastrado."));
         }
@@ -129,22 +133,64 @@ public class ConsultaFragment extends Fragment{
         db.close();
     }
 
+    public void createEdl() {
+        String sql="", strGrupo="", strLinha="", oldGrupo="";
+        Cursor cursor;
+        Group group = null;
+
+        sql = "SELECT  v.dt_cadastro, m.nome as mun, i.cadastro, i.endereco, 'EDL' as ativ, v.status, v._id, '16' as ativ " +
+                "FROM edl v join cadastro_edl i using(id_cadastro_edl) join municipio m using(id_municipio) ";
+
+        cursor = db.getWritableDatabase().rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                strGrupo = cursor.getString(0).trim()+"\n-"+cursor.getString(7).trim()+"-"+cursor.getString(4).trim()+"\n-"+cursor.getString(1).trim();
+                if (oldGrupo == ""){
+                    oldGrupo = strGrupo;
+                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - ";
+                    group = new Group(strGrupo);
+                    group.setStatus(cursor.getInt(5));
+                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
+                } else if (strGrupo.equals(oldGrupo)){
+                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - ";
+                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
+                } else {
+                    groups.append(j++, group);
+                    //strGrupo = cursor.getString(0)+"-"+cursor.getString(3)+"-"+cursor.getString(1)+"- Quarteirao: "+cursor.getString(2);
+                    oldGrupo = strGrupo;
+                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - ";
+                    group = new Group(strGrupo);
+                    group.setStatus(cursor.getInt(5));
+                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
+                }
+            } while (cursor.moveToNext());
+            groups.append(j++, group);
+        }
+        db.close();
+    }
+
     public void createAlado() {
         String sql="", strGrupo="", strLinha="", oldGrupo="";
         Cursor cursor;
         Group group = null;
 
-        sql = "SELECT  v.dt_cadastro, m.nome as mun, (trim(q.numero_quarteirao)|| ' - ' || trim(q.sub_numero)) as quart," +
-                "a.nome as ativ, (case id_situacao when 1 then 'T' else 'P' end) as sit, v.status, v._id, v.id_atividade, imovel, am_larva, am_intra, am_peri " +
-                "FROM alado v join municipio m using(id_municipio) join quarteirao q using(id_quarteirao) " +
+        sql = "SELECT  v.dt_cadastro, m.nome as mun, (case when ref_ativ == 9 then (trim(q.numero_quarteirao)|| ' - ' || trim(q.sub_numero)) else (trim(i.numero_imovel)) end) as quart," +
+                "'Cap Alado ' || a.nome as ativ, (case id_situacao when 1 then 'T' else 'P' end) as sit, v.status, v._id, v.ref_ativ, (case when ref_ativ == 9 then imovel else trim(i.endereco) end), am_larva, am_intra, am_peri, ref_ativ " +
+                "FROM alado v join municipio m using(id_municipio) left join quarteirao q using(id_quarteirao) left join imovel i using(id_imovel)" +
                 "join atividade a using(id_atividade)";
         cursor = db.getWritableDatabase().rawQuery(sql, null);
         if (cursor.moveToFirst()) {
             do {
+                Map<String, String> row = new HashMap<>();
+                for (int i = 0; i < cursor.getColumnCount(); i++) {
+                    row.put(cursor.getColumnName(i), cursor.getString(i));
+                }
+                int ref_ativ = cursor.getInt(12);
+                String ident = ref_ativ == 9 ? "- Quadra: " : "- Imóvel: ";
                 String am = "Am: Larva(" + (cursor.getString(9)==null ? "-" : cursor.getString(9))+") / Intra("
                         + (cursor.getString(10)==null ? "-" : cursor.getString(10))+") / Peri("
                         + (cursor.getString(11)==null ? "-" : cursor.getString(11))+")";
-                strGrupo = cursor.getString(0).trim()+"\n-"+cursor.getString(7).trim()+"-"+cursor.getString(3).trim()+"\n-"+cursor.getString(1).trim()+"- Quadra: "+cursor.getString(2).trim();
+                strGrupo = cursor.getString(0).trim()+"\n-"+cursor.getString(7).trim()+"-"+cursor.getString(3).trim()+"\n-"+cursor.getString(1).trim()+ident+cursor.getString(2).trim();
                 if (oldGrupo == ""){
                     oldGrupo = strGrupo;
                     strLinha = "Im: " + cursor.getString(8)+" ("+cursor.getString(4)+") - " + am;
@@ -158,45 +204,6 @@ public class ConsultaFragment extends Fragment{
                     groups.append(j++, group);
                     oldGrupo = strGrupo;
                     strLinha = "Im: " + cursor.getString(8)+" ("+cursor.getString(4)+") - " + am;
-                    group = new Group(strGrupo);
-                    group.setStatus(cursor.getInt(5));
-                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
-                }
-            } while (cursor.moveToNext());
-            groups.append(j++, group);
-        }
-        db.close();
-    }
-
-    public void createAladoIm() {
-        String sql="", strGrupo="", strLinha="", oldGrupo="";
-        Cursor cursor;
-        Group group = null;
-
-        sql = "SELECT  v.dt_cadastro, m.nome as mun, i.numero_imovel, i.endereco, a.nome as ativ, v.status, v._id, " +
-                "v.id_atividade, am_larva, am_intra, am_peri, v.id_sub_ativ  FROM alado_im v join imovel i using(id_imovel) join municipio m using(id_municipio) " +
-                "join atividade a on(a.id_atividade=v.id_sub_ativ)";
-        cursor = db.getWritableDatabase().rawQuery(sql, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String am = "Am: Larva(" + (cursor.getString(8)==null ? "-" : cursor.getString(8))+") / Intra("
-                        + (cursor.getString(9)==null ? "-" : cursor.getString(9))+") / Peri("
-                        + (cursor.getString(10)==null ? "-" : cursor.getString(10))+")";
-                strGrupo = cursor.getString(0).trim()+"\n-"+cursor.getString(7).trim()+"- Capt Alado("+cursor.getString(11).trim()+")\n-"+cursor.getString(1).trim();
-                if (oldGrupo == ""){
-                    oldGrupo = strGrupo;
-                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - " + am;
-                    group = new Group(strGrupo);
-                    group.setStatus(cursor.getInt(5));
-                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
-                } else if (strGrupo.equals(oldGrupo)){
-                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - " + am;
-                    group.children.add(new Children((long) cursor.getInt(6),strLinha));
-                } else {
-                    groups.append(j++, group);
-                    //strGrupo = cursor.getString(0)+"-"+cursor.getString(3)+"-"+cursor.getString(1)+"- Quarteirao: "+cursor.getString(2);
-                    oldGrupo = strGrupo;
-                    strLinha = "Cad: " + cursor.getString(2).trim()+" ("+cursor.getString(3).trim()+") - " + am;
                     group = new Group(strGrupo);
                     group.setStatus(cursor.getInt(5));
                     group.children.add(new Children((long) cursor.getInt(6),strLinha));

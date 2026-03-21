@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class GerenciarBanco extends SQLiteOpenHelper {
     HashMap<String,ContentValues[]> registros = new HashMap<String,ContentValues[]>();
     private static final String NOME_BANCO = "sisamob.db";
-    private static final int VERSAO_SCHEMA = 16;
+    private static final int VERSAO_SCHEMA = 22; //ATENÇÂO: remover as referencias ao br em vc_imovel e observação no vc_folha
     private static final String[] sql = {
             "CREATE TABLE municipio(id_municipio INTEGER, nome TEXT, codigo TEXT)",
             "CREATE TABLE area_nav(id_area_nav INTEGER, id_municipio INTEGER, nome TEXT)",
@@ -27,28 +27,27 @@ public class GerenciarBanco extends SQLiteOpenHelper {
             "CREATE TABLE tipo_rec(id_tipo_rec INTEGER, id_grupo_rec INTEGER, codigo INTEGER, nome TEXT)",
             "CREATE TABLE atividade(id_atividade INTEGER, nome TEXT, grupo INTEGER)",
             "CREATE TABLE produto(id_produto INTEGER, codigo TEXT, nome TEXT, tipo_uso INTEGER)",
+            "CREATE TABLE cadastro_edl(id_cadastro_edl INTEGER, id_municipio INTEGER, cadastro TEXT, endereco TEXT)",
             //tabelas de atividade
             "CREATE TABLE vc_imovel(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_imovel INTEGER, id_execucao INTEGER, id_situacao INTEGER,"+
-                    "id_prod_focal INTEGER, qt_focal integer, id_prod_peri INTEGER, qt_peri INTEGER, id_prod_neb INTEGER, qt_neb INTEGER, mecanico INTEGER, " +
-                    "alternativo INTEGER, focal INTEGER, peri INTEGER, neb INTEGER, agente TEXT, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
+                    "id_prod_focal INTEGER, qt_focal integer, id_prod_peri INTEGER, qt_peri INTEGER, id_prod_neb INTEGER, qt_neb INTEGER, id_prod_br INTEGER, qt_br INTEGER, mecanico INTEGER, " +
+                    "alternativo INTEGER, focal INTEGER, peri INTEGER, neb INTEGER, br_aedes INTEGER, agente TEXT, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
             "CREATE TABLE vc_folha(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_municipio INTEGER, id_quarteirao INTEGER, id_area_nav INTEGER, id_atividade INTEGER, imovel INTEGER, "+
-                    "id_execucao INTEGER, id_situacao INTEGER, id_tipo INTEGER, id_prod_focal INTEGER, qt_focal integer, id_prod_peri INTEGER, qt_peri INTEGER, id_prod_neb INTEGER, qt_neb INTEGER, " +
-                    "mecanico INTEGER, alternativo INTEGER, focal INTEGER, peri INTEGER, neb INTEGER, agente TEXT, latitude TEXT, longitude TEXT, status INTEGER, casa TEXT, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
+                    "id_execucao INTEGER, id_situacao INTEGER, id_tipo INTEGER, id_prod_focal INTEGER, qt_focal integer, id_prod_peri INTEGER, qt_peri INTEGER, id_prod_neb INTEGER, qt_neb INTEGER, id_prod_br INTEGER, qt_br INTEGER, " +
+                    "mecanico INTEGER, alternativo INTEGER, focal INTEGER, peri INTEGER, neb INTEGER, br_aedes INTEGER, agente TEXT, latitude TEXT, longitude TEXT, status INTEGER, casa TEXT, obs TEXT, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
             "CREATE TABLE vc_ovitrampa(_id INTEGER PRIMARY KEY AUTOINCREMENT, id_ovitrampa INTEGER, id_execucao INTEGER, dt_instala TEXT, dt_retira TEXT, "+
                     "peri_intra INTEGER, obs INTEGER, agente TEXT, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
             "CREATE TABLE recipiente(_id INTEGER PRIMARY KEY AUTOINCREMENT, id_grupo INTEGER, id_tipo INTEGER, existente INTEGER, agua INTEGER, larva INTEGER,"+
                     "amostra TEXT, tabela INTEGER, id_fk INTEGER, status INTEGER)",
             "CREATE TABLE condicao(_id INTEGER PRIMARY KEY AUTOINCREMENT, id_fk INTEGER, cond_casa INTEGER, cond_quintal INTEGER, cond_sombra INTEGER, pavimento INTEGER, galinha INTEGER, "+
                     "cao INTEGER, outros INTEGER, status INTEGER)",
-            "CREATE TABLE coordenadas(_id INTEGER PRIMARY KEY AUTOINCREMENT, id_imovel INTEGER, latitude TEXT, longitude TEXT, status INTEGER)",
-            "CREATE TABLE alado(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_municipio INTEGER, id_quarteirao INTEGER, id_atividade INTEGER, imovel INTEGER, casa TEXT, agente TEXT, "+
+            "CREATE TABLE coordenadas(_id INTEGER PRIMARY KEY AUTOINCREMENT, id_atividade INTEGER, id_imovel INTEGER, latitude TEXT, longitude TEXT, status INTEGER)",
+            "CREATE TABLE alado(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_municipio INTEGER, id_quarteirao INTEGER, id_atividade INTEGER, ref_ativ INTEGER, id_imovel INTEGER, imovel INTEGER, casa TEXT, agente TEXT, "+
                     "id_situacao INTEGER, umidade REAL, temperatura REAL, moradores INTEGER, rec_larva INTEGER, am_larva TEXT, am_intra TEXT, am_peri TEXT, latitude TEXT, longitude TEXT, id_execucao INTEGER, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)",
-            "CREATE TABLE alado_im(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_municipio INTEGER, id_atividade INTEGER, id_imovel INTEGER, id_sub_ativ INTEGER, agente TEXT, "+
-                    "id_situacao INTEGER, umidade REAL, temperatura REAL, moradores INTEGER, rec_larva INTEGER, am_larva TEXT, am_intra TEXT, am_peri TEXT, latitude TEXT, longitude TEXT, id_execucao INTEGER, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)"
-
+            "CREATE TABLE edl(_id INTEGER PRIMARY KEY AUTOINCREMENT, dt_cadastro TEXT, id_cadastro_edl INTEGER, id_municipio INTEGER, id_situacao INTEGER, id_nivel INTEGER, larvas INTEGER, pupas INTEGER, observacao TEXT, agente TEXT, ocorrencias TEXT, id_execucao INTEGER, ordem INTEGER, status INTEGER, dt_insere DATETIME DEFAULT CURRENT_TIMESTAMP)"
     };
 
-    private static final String[] tabelas = {"municipio","area_nav","area","censitario","quarteirao","quart_nav","imovel","ovitrampa","grupo_rec","tipo_rec","atividade","produto","vc_imovel", "vc_folha", "vc_ovitrampa", "recipiente", "condicao","coordenadas","alado","alado_im"};
+    private static final String[] tabelas = { "municipio","area_nav","area","censitario","quarteirao","quart_nav","imovel","ovitrampa","grupo_rec","tipo_rec","atividade","produto","cadastro_edl","vc_imovel", "vc_folha", "vc_ovitrampa", "recipiente", "condicao","coordenadas","alado","edl" };
 
     //Construtor
     public GerenciarBanco(Context context) {
@@ -83,6 +82,7 @@ public class GerenciarBanco extends SQLiteOpenHelper {
     public void persiste(SQLiteDatabase db){
         //fornecer valor padrão para o campo alterado
         String[] sqlPersiste = {
+                //,, "condicao","coordenadas","alado","edl"
                 "SELECT id_municipio, nome, codigo FROM municipio",
                 "SELECT id_area_nav, id_municipio, nome FROM area_nav",
                 "SELECT id_area, id_municipio, codigo FROM area",
@@ -95,18 +95,18 @@ public class GerenciarBanco extends SQLiteOpenHelper {
                 "SELECT id_tipo_rec, id_grupo_rec, codigo, nome FROM tipo_rec",
                 "SELECT id_atividade, nome, grupo FROM atividade",
                 "SELECT id_produto, codigo, nome, tipo_uso FROM produto",
+                "SELECT id_cadastro_edl, id_municipio, cadastro, endereco FROM cadastro_edl",
                 "SELECT _id, dt_cadastro, id_imovel, id_execucao, id_situacao, id_prod_focal, qt_focal, id_prod_peri, qt_peri, id_prod_neb, qt_neb, mecanico, " +
-                        "alternativo, focal, peri, neb, agente, status FROM vc_imovel",
+                        "alternativo, focal, peri, neb, agente, status, 0 as br_aedes, 0 as qt_br, 0 as id_prod_br  FROM vc_imovel",
                 "SELECT _id, dt_cadastro, id_municipio, id_quarteirao, id_area_nav, id_atividade, imovel, id_execucao, id_situacao, id_tipo, id_prod_focal, qt_focal, id_prod_peri, qt_peri, id_prod_neb, qt_neb, " +
-                        "mecanico, alternativo, focal, peri, neb, agente, latitude, longitude, status, casa  FROM vc_folha",
+                        "mecanico, alternativo, focal, peri, neb, agente, latitude, longitude, status, casa,  '' as obs  FROM vc_folha",
                 "SELECT _id, id_ovitrampa, id_execucao, dt_instala, dt_retira, peri_intra, obs, agente, status  FROM vc_ovitrampa",
                 "SELECT _id, id_grupo, id_tipo, existente, agua, larva, amostra, tabela, id_fk, status FROM recipiente",
                 "SELECT _id, id_fk, cond_casa, cond_quintal, cond_sombra, pavimento, galinha, cao, outros, status  FROM condicao",
-                "SELECT _id, id_imovel, latitude, longitude, status FROM coordenadas",
+                "SELECT _id, id_imovel, 0 as id_atividade, latitude, longitude, status FROM coordenadas",
                 "SELECT _id, dt_cadastro, id_municipio, id_quarteirao, id_atividade, imovel, casa, id_situacao, umidade, temperatura, moradores, rec_larva, am_larva, " +
                         "am_intra, am_peri, latitude, longitude, status, dt_insere, agente FROM alado",
-                "SELECT _id, dt_cadastro, id_municipio, id_atividade, id_imovel, id_sub_ativ, id_situacao, umidade, temperatura, moradores, rec_larva, am_larva, " +
-                        "am_intra, am_peri, latitude, longitude, status, dt_insere, agente FROM alado_im"};
+                "SELECT _id, dt_cadastro, id_cadastro_edl, 0 as id_municipio, id_situacao, id_nivel, larvas, pupas, observacao, agente, ocorrencias, id_execucao, ordem, status, dt_insere FROM edl"};
 
         for (int i = 0; i < sqlPersiste.length; i++) {
             int x = 0;

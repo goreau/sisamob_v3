@@ -103,7 +103,21 @@
                     android:textSize="@dimen/font_size"
                     android:text="@string/chkRec" />
             </RadioGroup>
-
+                <View
+                    android:id="@+id/view29"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black" />
+                <EditText
+                    android:id="@+id/etObs"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:textSize="@dimen/font_size"
+                    android:maxLength="255"
+                    android:hint="Observação" />
             <View
                 android:id="@+id/view1"
                 android:layout_width="wrap_content"
@@ -199,6 +213,28 @@
 
                     <utilitarios.NumberPicker
                         android:id="@+id/npNebulizacao"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size"
+                        android:orientation="horizontal"
+                        android:gravity="center" />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <CheckBox
+                        android:id="@+id/chkBri"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size"
+                        android:text="@string/tvBri" />
+
+
+
+                    <utilitarios.NumberPicker
+                        android:id="@+id/npBri"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/font_size"

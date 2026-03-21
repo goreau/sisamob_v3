@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Recipiente {
     long _id;
@@ -224,7 +224,40 @@ public class Recipiente {
         return gson.toJson(wordList);
     }
 
-    public String composeJSONfromSQLite2(int tab, String id) {
+    public ArrayList<HashMap<String, String>> composeJSONfromSQLite2(int tab, String id) {
+        Context context = PrincipalActivity.sisamobContext;
+        GerenciarBanco db = new GerenciarBanco(context);
+
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<>();
+        String selectQuery = "SELECT _id, id_grupo, id_tipo, existente, agua, larva, amostra, tabela, id_fk, status " +
+                "FROM recipiente WHERE tabela=" + tab + " AND id_fk=" + id;
+        Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id_mob", cursor.getString(0));
+                map.put("id_grupo", cursor.getString(1));
+                map.put("id_tipo", cursor.getString(2));
+                map.put("existente", cursor.getString(3));
+                map.put("agua", cursor.getString(4));
+                map.put("larva", cursor.getString(5));
+                String am = cursor.getString(6).trim();
+                if (am.isEmpty()) am = "";
+                map.put("amostra", am);
+                map.put("tabela", cursor.getString(7));
+                map.put("id_fk", cursor.getString(8));
+                map.put("status", cursor.getString(9));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return wordList;  // agora retorna a lista, não string JSON
+    }
+
+
+
+    public String composeJSONfromSQLite22(int tab, String id) {
         Context context = PrincipalActivity.sisamobContext;
         GerenciarBanco db = new GerenciarBanco(context);
         //String map = "[";

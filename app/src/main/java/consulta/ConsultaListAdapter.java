@@ -14,12 +14,12 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
-import com.sucen.sisamob.AladoFragment;
-import com.sucen.sisamob.AladoImFragment;
-import com.sucen.sisamob.ImovelCadFragment;
-import com.sucen.sisamob.ImovelFolhaFragment;
-import com.sucen.sisamob.OvitrampaFragment;
-import com.sucen.sisamob.R;
+import com.sucen.sisamobii.AladoFragment;
+import com.sucen.sisamobii.EdlFragment;
+import com.sucen.sisamobii.ImovelCadFragment;
+import com.sucen.sisamobii.ImovelFolhaFragment;
+import com.sucen.sisamobii.OvitrampaFragment;
+import com.sucen.sisamobii.R;
 
 import utilitarios.Storage;
 
@@ -150,11 +150,11 @@ public class ConsultaListAdapter extends BaseExpandableListAdapter {
             case 9: case 10:
                 frag = new AladoFragment();
                 break;
-            case 99:
-                frag = new AladoImFragment();
-                break;
             case 4:
                 frag = new OvitrampaFragment();
+                break;
+            case 16:
+                frag = new EdlFragment();
                 break;
             default:
                 frag = new ImovelFolhaFragment();

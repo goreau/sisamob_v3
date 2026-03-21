@@ -2,11 +2,8 @@ package producao;
 
 import java.util.List;
 
-import producao.VcFolha;
-import producao.VcImovel;
-
-import com.sucen.sisamob.PrincipalActivity;
-import com.sucen.sisamob.R;
+import com.sucen.sisamobii.PrincipalActivity;
+import com.sucen.sisamobii.R;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -36,8 +33,9 @@ public class RelatorioAdapter extends BaseAdapter {
         VcFolha obj = new VcFolha(0);
         lista.addAll(obj.getList());
 
-        Condicao obj4 = new Condicao(0);
+        Edl obj4 = new Edl(0);
         lista.addAll(obj4.getList());
+
         rec=1;
         Recipiente obj3 = new Recipiente(0);
         lista.addAll(obj3.getList());
@@ -45,8 +43,8 @@ public class RelatorioAdapter extends BaseAdapter {
         Alado obj6 = new Alado(0);
         lista.addAll(obj6.getList());
 
-        AladoIm obj7 = new AladoIm(0);
-        lista.addAll(obj7.getList());
+        /*AladoIm obj7 = new AladoIm(0);
+        lista.addAll(obj7.getList());*/
     }
 
     @Override

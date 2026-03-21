@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:paddingLeft="5dp"
     android:paddingTop="?attr/actionBarSize"
-    tools:context="com.sucen.sisamob.PrincipalActivity">
+    tools:context="com.sucen.sisamobii.PrincipalActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,6 +45,12 @@
             android:layout_height="wrap_content"
             android:text="@string/btLimpaCoordenada"
             android:id="@+id/rbCoordenada" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDL"
+            android:id="@+id/rbEdl" />
 
     </RadioGroup>
 

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class VcImovel {
     long _id;
@@ -27,6 +27,8 @@ public class VcImovel {
     int qt_focal;
     int id_prod_peri;
     int qt_peri;
+    int id_prod_bri;
+    int qt_bri;
     int id_prod_neb;
     int qt_neb;
     int mecanico;
@@ -34,6 +36,7 @@ public class VcImovel {
     int focal;
     int peri;
     int neb;
+    int bri;
     String agente;
     int status;
     MyToast toast;
@@ -140,6 +143,16 @@ public class VcImovel {
         return qt_neb;
     }
 
+    public int getQt_bri() { return qt_bri; }
+    public void setQt_bri(int qt) { qt_bri = qt; }
+
+    public int getBri() { return bri; }
+
+    public void setBri(int bri){ this.bri = bri; }
+
+    public int getId_prod_bri() { return id_prod_bri; }
+    public void setId_prod_bri(int prod) { id_prod_bri = prod; }
+
     public void setQt_neb(int qt_neb) {
         this.qt_neb = qt_neb;
     }
@@ -197,7 +210,7 @@ public class VcImovel {
         GerenciarBanco db = new GerenciarBanco(context);
         String selectQuery = "SELECT dt_cadastro, id_imovel, id_execucao, id_situacao,"+
                 "id_prod_focal, qt_focal, id_prod_peri, qt_peri, agente, id_prod_neb, qt_neb, " +
-                "mecanico, alternativo, focal, peri, neb, status FROM vc_imovel v where _id=" + this._id;
+                "mecanico, alternativo, focal, peri, neb, status, br_aedes, id_prod_br, qt_br FROM vc_imovel v where _id=" + this._id;
 
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -218,6 +231,9 @@ public class VcImovel {
             this.peri           = cursor.getInt(14);
             this.neb            = cursor.getInt(15);
             this.status         = cursor.getInt(16);
+            this.bri            = cursor.getInt(17);
+            this.id_prod_bri    = cursor.getInt(18);
+            this.qt_bri         = cursor.getInt(19);
         }
         db.close();
 
@@ -246,6 +262,9 @@ public class VcImovel {
             valores.put("focal",this.focal);
             valores.put("peri",this.peri);
             valores.put("neb",this.neb);
+            valores.put("br_aedes",this.bri);
+            valores.put("qt_br",this.qt_bri);
+            valores.put("id_prod_br",this.id_prod_bri);
             if (this._id > 0) {
                 String[] args = { Long.toString(this._id) };
                 db.getWritableDatabase().update("vc_imovel", valores, "_id=?",
@@ -333,15 +352,16 @@ public class VcImovel {
         GerenciarBanco db = new GerenciarBanco(context);
         Recipiente rec = new Recipiente(0);
 
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, Object>> wordList;
+        wordList = new ArrayList<HashMap<String, Object>>();
         String selectQuery = "SELECT  _id, dt_cadastro, id_imovel, id_execucao, id_situacao, "
                 + "id_prod_focal, qt_focal, id_prod_peri, qt_peri, agente, status, id_prod_neb, "
-                + "qt_neb, mecanico, alternativo, focal, peri, neb, datetime(dt_insere,'localtime') FROM vc_imovel where status = 0";
+                + "qt_neb, mecanico, alternativo, focal, peri, neb, datetime(dt_insere,'localtime'), "
+                + "br_aedes, id_prod_br, qt_br FROM vc_imovel where status = 0";
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                HashMap<String, String> map = new HashMap<String, String>();
+                HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("id_vc_imovel", cursor.getString(0));
                 map.put("dt_cadastro", cursor.getString(1));
                 map.put("id_imovel", cursor.getString(2));
@@ -351,7 +371,22 @@ public class VcImovel {
                 map.put("qt_focal", cursor.getString(6));
                 map.put("id_prod_peri", cursor.getString(7));
                 map.put("qt_peri", cursor.getString(8));
-                map.put("agente", cursor.getString(9).replace(" ","_"));
+                String original = cursor.getString(9);
+
+                if (original != null) {
+                    // 1. Substitui espaços
+                    String processed = original.replace(" ", "_");
+
+                    // 2. Limita o endIndex ao tamanho mínimo entre o tamanho da string e 30
+                    int maxLength = Math.min(processed.length(), 30);
+
+                    // 3. Aplica o substring de forma segura
+                    map.put("agente", processed.substring(0, maxLength));
+                } else {
+                    // Lida com o caso nulo
+                    map.put("agente", "N/I");
+                }
+              //  map.put("agente", cursor.getString(9).replace(" ","_").substring(0,30));
                 map.put("status", cursor.getString(10));
                 map.put("id_prod_neb", cursor.getString(11));
                 map.put("qt_neb", cursor.getString(12));
@@ -361,6 +396,9 @@ public class VcImovel {
                 map.put("peri", cursor.getString(16));
                 map.put("neb", cursor.getString(17));
                 map.put("dt_insere", cursor.getString(18));
+                map.put("br_aedes", cursor.getString(19));
+                map.put("id_prod_br", cursor.getString(20));
+                map.put("qt_br", cursor.getString(21));
                 map.put("recipientes", rec.composeJSONfromSQLite2(1, cursor.getString(0)));
                 wordList.add(map);
             } while (cursor.moveToNext());
@@ -475,7 +513,7 @@ public class VcImovel {
                 "|| sum(case when id_situacao=3 then 1 else 0 end) || ')', 'Total: ' || count(v._id) FROM vc_imovel v join imovel i using(id_imovel) join " +
                 "atividade a using(id_atividade) group by a.nome";*/
 
-        String selectQuery = "select a.nome, a.pa ||  ' \n-> Rec. Lv: ' ||  b.rec, a.tt from  (" +
+        String selectQuery = "select a.nome, a.pa || ' \n-> Rec. Lv: ' ||  b.rec, a.tt from  (" +
                 "SELECT a.nome, ' T:(' || sum(case when id_situacao=1 then 1 else 0 end) || ') / F: (' || sum(case when id_situacao=2 then 1 else 0 end) ||') / R: (' || sum(case when id_situacao=3 then 1 else 0 end) || ')' || ' - Total: ' || count(v._id) || ' \n-> Im Lv: ' || count(distinct r.id_fk)  as pa, count(v._id) as tt  FROM vc_imovel v join imovel i using(id_imovel) join atividade a using(id_atividade) left join  (select id_fk, sum(larva) as foco from recipiente  group by id_fk) r  on r.id_fk=v._id  group by a.nome) a " +
                 "left join   (" +
                 "select nome, group_concat(tipo || ' (' || foco || ')' ) as rec from (  select a.nome, tipo, sum(foco) as foco from vc_imovel v join imovel i using(id_imovel) join atividade a using(id_atividade) left join   (select t.nome as tipo, id_fk, sum(larva) as foco from recipiente r join tipo_rec t on t.id_tipo_rec=r.id_tipo where larva>0 group by tipo, id_fk) x on x.id_fk=v._id group by a.nome, tipo) y) b" +
@@ -491,43 +529,6 @@ public class VcImovel {
             } while (cursor.moveToNext());
         }
         return lista;
-    }
-
-    public ContentValues[] persiste() {
-        int i = 0;
-        GerenciarBanco db = new GerenciarBanco(context);
-        String selectQuery = "SELECT  _id, dt_cadastro, id_imovel, id_execucao, id_situacao, "
-                + "id_prod_focal, qt_focal, id_prod_peri, qt_peri, agente, status, id_prod_neb, "
-                + "qt_neb, mecanico, alternativo, focal, peri, neb FROM vc_imovel where status = 0";
-
-        Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
-        ContentValues[] total = new ContentValues[cursor.getCount()];
-        if (cursor.moveToFirst()) {
-            do {
-                ContentValues map = new ContentValues();
-                map.put("_id", cursor.getString(0));
-                map.put("dt_cadastro", cursor.getString(1));
-                map.put("id_imovel", cursor.getString(2));
-                map.put("id_execucao", cursor.getString(3));
-                map.put("id_situacao", cursor.getString(4));
-                map.put("id_prod_focal", cursor.getString(5));
-                map.put("qt_focal", cursor.getString(6));
-                map.put("id_prod_peri", cursor.getString(7));
-                map.put("qt_peri", cursor.getString(8));
-                map.put("agente", cursor.getString(9).replace(" ","_"));
-                map.put("status", cursor.getString(10));
-                map.put("id_prod_neb", cursor.getString(11));
-                map.put("qt_neb", cursor.getString(12));
-                map.put("mecanico", cursor.getString(13));
-                map.put("alternativo", cursor.getString(14));
-                map.put("focal", cursor.getString(15));
-                map.put("peri", cursor.getString(16));
-                map.put("neb", cursor.getString(17));
-                total[i++] = map;
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return total;
     }
 
     public boolean recupera(ContentValues[] dados){
