@@ -321,7 +321,7 @@ public class Utils {
                         break;
                     case 5:
                         Alado al = new Alado(0);
-                        tabela = "Alado (Pré e Pós)";
+                        tabela = "Captura de Alados ";
                         al.atualizaStatus(obj.get("id").toString(), obj.get("status").toString());
                         break;
                     case 6:

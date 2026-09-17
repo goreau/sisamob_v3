@@ -354,10 +354,11 @@ public class VcImovel {
 
         ArrayList<HashMap<String, Object>> wordList;
         wordList = new ArrayList<HashMap<String, Object>>();
-        String selectQuery = "SELECT  _id, dt_cadastro, id_imovel, id_execucao, id_situacao, "
+        String selectQuery = "SELECT  _id, dt_cadastro, v.id_imovel, id_execucao, id_situacao, "
                 + "id_prod_focal, qt_focal, id_prod_peri, qt_peri, agente, status, id_prod_neb, "
                 + "qt_neb, mecanico, alternativo, focal, peri, neb, datetime(dt_insere,'localtime'), "
-                + "br_aedes, id_prod_br, qt_br FROM vc_imovel where status = 0";
+                + "br_aedes, id_prod_br, qt_br, i.id_municipio FROM vc_imovel as v join imovel as i on i.id_imovel=v.id_imovel "
+                + " where status = 0";
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
@@ -365,6 +366,7 @@ public class VcImovel {
                 map.put("id_vc_imovel", cursor.getString(0));
                 map.put("dt_cadastro", cursor.getString(1));
                 map.put("id_imovel", cursor.getString(2));
+                map.put("id_municipio", cursor.getString(22));
                 map.put("id_execucao", cursor.getString(3));
                 map.put("id_situacao", cursor.getString(4));
                 map.put("id_prod_focal", cursor.getString(5));
@@ -406,7 +408,7 @@ public class VcImovel {
         db.close();
         Gson gson = new GsonBuilder().create();
         // Use GSON to serialize Array List to JSON
-       // System.out.println(wordList);
+        System.out.println(wordList);
         return gson.toJson(wordList);
     }
 

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class VcOvitrampa {
     long _id;
@@ -25,6 +25,7 @@ public class VcOvitrampa {
     int id_execucao;
     int peri_intra;
     int obs;
+    String observacao;
     String agente;
     int status;
     MyToast toast;
@@ -93,12 +94,14 @@ public class VcOvitrampa {
     public void setStatus(int status) {
         this.status = status;
     }
+    public String getObservacao() { return observacao; }
+    public void setObservacao(String observacao) { this.observacao = observacao; }
 
     public void popula(){
         Context context = PrincipalActivity.sisamobContext;
         GerenciarBanco db = new GerenciarBanco(context);
         String selectQuery = "SELECT id_ovitrampa, id_execucao, dt_instala, dt_retira, "+
-                "peri_intra, obs, agente, status FROM vc_ovitrampa v where _id=" + this._id;
+                "peri_intra, obs, agente, status, observacao FROM vc_ovitrampa v where _id=" + this._id;
 
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -110,6 +113,7 @@ public class VcOvitrampa {
             this.obs 			= cursor.getInt(5);
             this.agente 		= cursor.getString(6);
             this.status 		= cursor.getInt(7);
+            this.observacao     = cursor.getString(8);
         }
         db.close();
 
@@ -127,6 +131,7 @@ public class VcOvitrampa {
             valores.put("id_execucao", this.id_execucao);
             valores.put("peri_intra", this.peri_intra);
             valores.put("obs", this.obs);
+            valores.put("observacao", this.observacao);
             valores.put("agente", this.agente);
 
             if (this._id > 0) {
@@ -197,7 +202,7 @@ public class VcOvitrampa {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT  _id, dt_instala, dt_retira, id_ovitrampa, id_execucao, "
-                + "peri_intra, obs, agente, status, datetime(dt_insere,'localtime') FROM vc_ovitrampa where status = 0";
+                + "peri_intra, obs, agente, status, datetime(dt_insere,'localtime'), observacao FROM vc_ovitrampa where status = 0";
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
@@ -209,9 +214,25 @@ public class VcOvitrampa {
                 map.put("id_execucao", cursor.getString(4));
                 map.put("peri_intra", cursor.getString(5));
                 map.put("obs", cursor.getString(6));
-                map.put("agente", cursor.getString(7).replace(" ", "_"));
+                String original = cursor.getString(7);
+
+                if (original != null) {
+                    // 1. Substitui espaços
+                    String processed = original.replace(" ", "_");
+
+                    // 2. Limita o endIndex ao tamanho mínimo entre o tamanho da string e 30
+                    int maxLength = Math.min(processed.length(), 30);
+
+                    // 3. Aplica o substring de forma segura
+                    map.put("agente", processed.substring(0, maxLength));
+                } else {
+                    // Lida com o caso nulo
+                    map.put("agente", "N/I");
+                }
+             //   map.put("agente", cursor.getString(7).replace(" ", "_").substring(0,30));
                 map.put("status", cursor.getString(8));
                 map.put("dt_insere", cursor.getString(9));
+                map.put("observacao", cursor.getString(10));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
@@ -311,7 +332,7 @@ public class VcOvitrampa {
         int i = 0;
         GerenciarBanco db = new GerenciarBanco(context);
         String selectQuery = "SELECT  _id, dt_instala, dt_retira, id_ovitrampa, id_execucao, "
-                + "peri_intra, obs, agente, status FROM vc_ovitrampa where status = 0";
+                + "peri_intra, obs, agente, status, observacao FROM vc_ovitrampa where status = 0";
 
         Cursor cursor = db.getWritableDatabase().rawQuery(selectQuery, null);
         ContentValues[] total = new ContentValues[cursor.getCount()];
@@ -327,6 +348,7 @@ public class VcOvitrampa {
                 map.put("obs", cursor.getString(6));
                 map.put("agente", cursor.getString(7).replace(" ", "_"));
                 map.put("status", cursor.getString(8));
+                map.put("observacao", cursor.getString(9));
                 total[i++] = map;
             } while (cursor.moveToNext());
         }

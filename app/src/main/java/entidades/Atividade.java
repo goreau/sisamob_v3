@@ -12,7 +12,7 @@ import android.database.SQLException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Atividade {
     private int id_atividade;

@@ -160,25 +160,50 @@
                     android:textSize="@dimen/font_size"/>
             </TableRow>
              <TableRow
-                android:id="@+id/tableRow4"
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/chkNeb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size"
+                android:text="@string/tvNeb" />
+
+            <Spinner
+                android:id="@+id/spProdNeb"
+                android:layout_width="150dp"
+                android:textSize="@dimen/font_size"
+                android:layout_height="wrap_content" />
+
+            <utilitarios.NumberPicker
+                android:id="@+id/npNebulizacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:textSize="@dimen/font_size"/>
+        </TableRow>
+            <TableRow
+                android:id="@+id/tableRow5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                 <CheckBox
-                     android:id="@+id/chkNeb"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:textSize="@dimen/font_size"
-                     android:text="@string/tvNeb" />
+                <CheckBox
+                    android:id="@+id/chkBr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_size"
+                    android:text="BR Aedes" />
 
                 <Spinner
-                    android:id="@+id/spProdNeb"
+                    android:id="@+id/spProdBr"
                     android:layout_width="150dp"
                     android:textSize="@dimen/font_size"
                     android:layout_height="wrap_content" />
 
                 <utilitarios.NumberPicker
-                    android:id="@+id/npNebulizacao"
+                    android:id="@+id/npBr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

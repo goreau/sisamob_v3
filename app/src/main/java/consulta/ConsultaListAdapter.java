@@ -1,9 +1,13 @@
 package consulta;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
+//import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -26,10 +30,10 @@ import utilitarios.Storage;
 public class ConsultaListAdapter extends BaseExpandableListAdapter {
     private final SparseArray<Group> groups;
     public LayoutInflater inflater;
-    public Activity activity;
+    public FragmentActivity activity;
     int statusChild;
 
-    public ConsultaListAdapter(Activity act, SparseArray<Group> groups) {
+    public ConsultaListAdapter(FragmentActivity act, SparseArray<Group> groups) {
         activity = act;
         this.groups = groups;
         inflater = act.getLayoutInflater();
@@ -169,7 +173,7 @@ public class ConsultaListAdapter extends BaseExpandableListAdapter {
         // Setting the id
         frag.setArguments(data);
         // Getting reference to the FragmentManager
-        FragmentManager fragmentManager = activity.getFragmentManager();
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
         // Creating a fragment transaction
         FragmentTransaction ft = fragmentManager.beginTransaction();

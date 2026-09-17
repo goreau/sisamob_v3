@@ -28,7 +28,7 @@ public class NetworkUtils {
             conexao.setRequestMethod("GET");
             conexao.setReadTimeout(0);
             conexao.setConnectTimeout(0);
-            conexao.setRequestProperty("Authorization", "Bearer \"07WesTIoBfxZTUQ7G9BVcRlX4cuVba5+JjVoW4szUUg=\"");//"Bearer dev123");//"
+            conexao.setRequestProperty("Authorization", "Bearer \"07WesTIoBfxZTUQ7G9BVcRlX4cuVba5+JjVoW4szUUg=\"");//"Bearer dev123");//
             //conexao.setRequestProperty("Accept", "application/json");
 
             conexao.connect();

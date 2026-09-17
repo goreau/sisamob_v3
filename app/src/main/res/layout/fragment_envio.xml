@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.sucen.sisamob.PrincipalActivity">
+    tools:context="com.sucen.sisamobii.PrincipalActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,14 +16,6 @@
             android:drawableLeft="@drawable/vermelho"
             android:text="@string/tvConecta"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btSincroniza"
-            android:drawableRight="@drawable/sync"
-            android:textSize="@dimen/font_size"
-            android:paddingRight="60sp"
-            android:id="@+id/btSincroniza" />
         <TextView
             android:id="@+id/tvResEnvio"
             android:layout_width="match_parent"
@@ -50,5 +42,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_size" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btSincroniza"
+            android:drawableRight="@drawable/sync"
+            android:textSize="@dimen/font_size"
+            android:paddingRight="60sp"
+            android:id="@+id/btSincroniza" />
     </LinearLayout>
 </ScrollView>

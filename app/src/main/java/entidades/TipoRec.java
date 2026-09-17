@@ -11,7 +11,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.widget.Toast;
 
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class TipoRec {
     private int id_tipo_rec;

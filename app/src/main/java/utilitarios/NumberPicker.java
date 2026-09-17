@@ -2,6 +2,7 @@ package utilitarios;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -33,7 +34,7 @@ public class NumberPicker extends LinearLayout {
     Button increment;
     public EditText valueText;
 
-    private Handler repeatUpdateHandler = new Handler();
+    private Handler repeatUpdateHandler = new Handler(Looper.getMainLooper());
 
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;

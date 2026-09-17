@@ -10,10 +10,11 @@ import java.util.Date;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
+//import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Storage {
     public static final String PREFS_NAME = "SisamobStore";

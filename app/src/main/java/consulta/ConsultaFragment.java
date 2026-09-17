@@ -1,7 +1,9 @@
 package consulta;
 
 import utilitarios.GerenciarBanco;
-import android.app.Fragment;
+//import android.app.Fragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;

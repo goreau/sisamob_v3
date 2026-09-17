@@ -121,20 +121,6 @@
             android:layout_marginLeft="10dp" >
 
             <RadioButton
-                android:id="@+id/chkRegional"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_size"
-                android:text="@string/chkRegional" />
-
-            <RadioButton
-                android:id="@+id/chkDRS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_size"
-                android:text="DRS" />
-
-            <RadioButton
                 android:id="@+id/chkColegiado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

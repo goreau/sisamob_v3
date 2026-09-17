@@ -22,6 +22,10 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Manutenção" />
+        <item
+            android:id="@+id/nav_obs"
+            android:icon="@drawable/ic_relatorio"
+            android:title="Anotações" />
     </group>
 
     <item android:title="Integração">

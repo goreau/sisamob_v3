@@ -14,7 +14,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.widget.Toast;
 
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Area {
     private int id_area;

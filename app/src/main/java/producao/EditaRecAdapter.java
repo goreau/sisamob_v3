@@ -2,8 +2,8 @@ package producao;
 
 import java.util.List;
 
-import com.sucen.sisamob.PrincipalActivity;
-import com.sucen.sisamob.R;
+import com.sucen.sisamobii.PrincipalActivity;
+import com.sucen.sisamobii.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

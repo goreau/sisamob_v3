@@ -107,6 +107,29 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_size" />
 
+        <TextView
+            android:id="@+id/textView44"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size"
+            android:text="Complemento" />
+
+        <EditText
+            android:id="@+id/etOviObservacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="@dimen/font_size"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
         <Button
             android:id="@+id/btSalva"
             android:layout_width="match_parent"

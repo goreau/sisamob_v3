@@ -136,7 +136,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:textSize="@dimen/font_size"
-        android:inputType="text" >
+        android:inputType="number" >
 
         <requestFocus />
     </EditText>
@@ -157,53 +157,65 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:textSize="@dimen/font_size"
-        android:inputType="text" >
+        android:inputType="number" >
 
         <requestFocus />
     </EditText>
 
+    <CheckBox
+        android:id="@+id/cb10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Presença de Larvas"
+        android:tag="80" />
+    <CheckBox
+        android:id="@+id/cb11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Presença de Pupas"
+        android:tag="81" />
     <CheckBox
         android:id="@+id/cb1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Peça da EDL desaparecida"
         android:tag="65" />
-
-    <CheckBox
-        android:id="@+id/cb2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EDL desaparecida"
-        android:tag="66" />
-
-    <CheckBox
-        android:id="@+id/cb3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EDL quebrada"
-        android:tag="67" />
-
     <CheckBox
         android:id="@+id/cb4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Intervalo de manut maior que 30 dias"
         android:tag="68" />
-
+    <CheckBox
+        android:id="@+id/cb12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desinstalada"
+        android:tag="82" />
+    <CheckBox
+        android:id="@+id/cb2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EDL desaparecida"
+        android:tag="66" />
+    <CheckBox
+        android:id="@+id/cb3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EDL quebrada"
+        android:tag="67" />
+    <CheckBox
+        android:id="@+id/cb6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retirada"
+        android:tag="70" />
     <CheckBox
         android:id="@+id/cb5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mudança no local de instalação"
         android:tag="69" />
-
-    <CheckBox
-        android:id="@+id/cb6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Desativada/Retirada"
-        android:tag="70" />
-
     <CheckBox
         android:id="@+id/cb9"
         android:layout_width="wrap_content"

@@ -11,7 +11,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.widget.Toast;
 
-import com.sucen.sisamob.PrincipalActivity;
+import com.sucen.sisamobii.PrincipalActivity;
 
 public class Quarteirao {
     private int id_quarteirao;
@@ -111,7 +111,7 @@ public class Quarteirao {
         if(ativ==8 || ativ==13){
             sql = "SELECT trim(numero_quarteirao) as numero, trim(sub_numero) as sub, id_quarteirao from quarteirao where id_censitario=? order by numero_quarteirao";
         } else {
-            sql = "SELECT distinct trim(numero_quarteirao) as numero, 0 as sub, min(id_quarteirao) as id from quarteirao where id_censitario=? group by numero_quarteirao order by numero_quarteirao";
+            sql = "SELECT distinct trim(numero_quarteirao) as numero, 0 as sub, min(id_quarteirao) as id from quarteirao where id_censitario=? group by numero_quarteirao order by numero";
         }
        // String sql = "SELECT id_quarteirao, " + numQuart + " as codigo from quarteirao where id_censitario=? order by codigo";
 
@@ -126,5 +126,27 @@ public class Quarteirao {
         cursor.close();
         db.close();
         return quart;
+    }
+
+    public String[] getAncestraisPorQuarteirao(String idQuarteirao) {
+        String[] ids = new String[2]; // Index 0: id_censitario, Index 1: id_area
+        GerenciarBanco db = new GerenciarBanco(this.context);
+
+        String sql = "SELECT c.id_censitario, c.id_area " +
+                "FROM quarteirao AS q " +
+                "JOIN censitario AS c ON q.id_censitario = c.id_censitario " +
+                "WHERE q.id_quarteirao = ?";
+
+        Cursor cursor = db.getReadableDatabase().rawQuery(sql, new String[]{idQuarteirao});
+
+        if (cursor.moveToFirst()) {
+            ids[0] = cursor.getString(0); // id_censitario
+            ids[1] = cursor.getString(1); // id_area
+        }
+
+        cursor.close();
+        db.close();
+
+        return ids; // Retorna o array com os dois IDs (ou com valores null se não encontrar)
     }
 }

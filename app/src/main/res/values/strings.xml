@@ -12,6 +12,13 @@
     <string name="btLimpaFolha">Visitas</string>
     <string name="btLimpaOvitrampa">Ovitrampas</string>
     <string name="limpBotao">Limpar</string>
+    <string name="ctSobre">
+    <![CDATA[
+    <b>Sistema para automação da coleta de dados de controle de vetores.</b><br/><br/>
+    <i>Área Técnica de Vigilância Vetorial<br>
+    Todos os direitos reservados.</i>
+    ]]>
+</string>
 
 
     <string-array name="tabelas">
@@ -62,7 +69,7 @@
     <string name="tvBri">BR Aedes</string>
     <string name="tvExecucao">Execução:</string>
     <string name="chkSucen">Estado</string>
-    <string name="chkPsf">PACS/PSF</string>
+    <string name="chkPsf">ACS</string>
     <string name="tvGrupo">Grupo:</string>
     <string name="tvTipoRec">Tipo:</string>
     <string name="tvExistente">Existente:</string>
@@ -126,7 +133,6 @@
     <string name="chkRotina">Rotina</string>
     <string name="chkPendencia">Pendência</string>
     <string name="chkDemanda">Demanda</string>
-    <string name="ctSobre">Sistema para automação da coleta de dados de controle de vetores da dengue.\n - Área Técnica de Vigilância Vetorial - </string>
     <string name="btLimpaCoordenada">Coordenadas</string>
 
     <string name="tvAreaNeb">Área Transmissão:</string>
